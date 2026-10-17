@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: opsib
+      POSTGRES_PASSWORD: opsib-local-only
+      POSTGRES_DB: opsib
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opsib"]
+      interval: 2s
+      retries: 20
+  api:
+    build: .
+    environment:
+      OPSIB_DATABASE_URL: postgresql+psycopg://opsib:opsib-local-only@db:5432/opsib
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy

@@ -1,10 +1,16 @@
 """API request and response models."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
+
+# All API timestamps are rendered in UTC with a "Z" suffix.
+UTC = Annotated[
+    datetime,
+    PlainSerializer(lambda d: d.astimezone(timezone.utc).isoformat().replace("+00:00", "Z"), return_type=str),
+]
 
 
 class ORM(BaseModel):
@@ -33,7 +39,7 @@ class ImportOut(ORM):
     duplicate_rows: int
     conflict_rows: int
     rejected_rows: int
-    created_at: datetime
+    created_at: UTC
 
 
 class ImportDetailOut(ImportOut):
@@ -44,7 +50,7 @@ class DetectionRunOut(ORM):
     id: str
     rule_version: str
     mapping_version: str
-    evaluated_at: datetime
+    evaluated_at: UTC
     summary: dict[str, Any]
 
 
@@ -67,7 +73,7 @@ class DetectionRunDetailOut(DetectionRunOut):
 class EventOut(ORM):
     event_type: str
     actor: str
-    occurred_at: datetime
+    occurred_at: UTC
     data: dict[str, Any]
 
 
@@ -83,7 +89,7 @@ class AssignmentOut(ORM):
     reason: str
     candidates: list[Any]
     assigned_by: str
-    assigned_at: datetime
+    assigned_at: UTC
 
 
 class TaskOut(ORM):
@@ -95,9 +101,9 @@ class TaskOut(ORM):
     location_id: str
     assignee_id: str | None
     queue: str | None
-    due_at: datetime
-    created_at: datetime
-    updated_at: datetime
+    due_at: UTC
+    created_at: UTC
+    updated_at: UTC
     completed_by: str | None
     resolution_code: str | None
     evidence_ref: str | None
@@ -117,7 +123,7 @@ class ExceptionOut(ORM):
     status: str
     rule_version: str
     mapping_version: str
-    detected_at: datetime
+    detected_at: UTC
     po_number: str
     po_line_number: int
     supplier_code: str
@@ -128,9 +134,9 @@ class ExceptionOut(ORM):
     expected_qty: Decimal
     received_qty: Decimal
     variance_qty: Decimal
-    expected_receipt_by: datetime
+    expected_receipt_by: UTC
     resolution_code: str | None
-    resolved_at: datetime | None
+    resolved_at: UTC | None
 
 
 class ExceptionDetailOut(ExceptionOut):
