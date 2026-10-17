@@ -8,6 +8,7 @@ with a full audit trail.
 
 Stack: Python 3.12+, FastAPI, SQLAlchemy 2, Alembic, PostgreSQL (SQLite for quick local runs).
 
+* **[How to verify everything on your machine](docs/local-verification.md)**
 * [Architecture and data model](docs/architecture.md), which also answers both design questions
 * [API examples](docs/api-examples.md), recorded from a real run
 * [OpenAPI export](docs/openapi.json); the live docs are at `/docs` when the server runs
@@ -152,7 +153,8 @@ app/
 migrations/     Alembic (0001 initial schema)
 fixtures/       supplied files, unchanged (SHA256SUMS verified by a test)
 tests/
-scripts/generate_api_docs.py   regenerates docs/openapi.json and docs/api-examples.md
+scripts/generate_api_docs.py       regenerates docs/openapi.json and docs/api-examples.md
+scripts/verify_running_server.py   end-to-end check against a running server
 ```
 
 ## Assumptions and trade-offs
