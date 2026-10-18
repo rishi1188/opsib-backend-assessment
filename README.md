@@ -252,7 +252,7 @@ AI tools were used. The application makes no AI calls at runtime (see "AI bounda
   mapping, detection, routing and workflow, tests and docs).
 * Wrote the application code, the Alembic migrations, the automated tests, the verification
   script and the documentation in this repository.
-* Ran the test suite on SQLite and PostgreSQL 16, and on Python 3.12, 3.13 and 3.14.
+* Ran the test suite on SQLite and PostgreSQL 16, on Python 3.12 and 3.14.
 * Found and fixed two of its own bugs while preparing a manual test walkthrough: "latest
   detection run" was ambiguous under the frozen clock, and an open shortfall was wrongly cleared
   when its evidence became conflicting. Both have regression tests.
@@ -262,8 +262,6 @@ AI tools were used. The application makes no AI calls at runtime (see "AI bounda
 * Supplied the assessment brief, the fixture data and the constraints: Python/FastAPI/
   SQLAlchemy, the frozen evaluation time, neutral findings, the routing rules and the task
   lifecycle.
-* Reviewed and approved the plan before implementation started, and chose to keep the scope to
-  the backend (no frontend), as the brief asks.
 * Ran everything myself on my own Windows laptop: installed dependencies, ran the test suite,
   started the API, ran `scripts/verify_running_server.py` (all checks passed) and exercised the
   endpoints in the Swagger UI.
@@ -271,5 +269,5 @@ AI tools were used. The application makes no AI calls at runtime (see "AI bounda
   Python 3.14 wheels, and Git line-ending conversion breaking the fixture checksum test.
 * Decided which fixes went into the submission.
 
-I am responsible for every line submitted and have prepared to explain the design, the
-trade-offs and the failure modes, and to modify the code during the review.
+I take responsibility for the submitted code and can explain the design, the trade-offs and the
+failure modes, and change the code during the review.
