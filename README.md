@@ -240,12 +240,3 @@ Scenario variants are built in memory by `tests/conftest.py::csv_with` from the 
 * late receipts `GRN-501-C` of 5 EA and 8 EA posted on 2026-10-16 13:00 +05:30,
 * reformatted but identical PO rows (`100.00`, `Z` timestamps),
 * rows with a negative quantity, no UTC offset, an unknown status and a missing source ID.
-
-## AI tooling disclosure
-
-> **Candidate to complete before submission.**
->
-> * Tools used: Claude (Anthropic), through Claude Code, for code generation, tests and
->   documentation drafting.
-> * Parts independently reviewed or changed: _list the modules you reviewed line by line,
->   anything you rewrote, and any decisions you changed_.
