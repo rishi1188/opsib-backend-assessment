@@ -15,7 +15,7 @@ Response `201`
 
 ```json
 {
-  "id": "74dc140b-b3f5-4ffb-80a4-84abcb1977b2",
+  "id": "d2a0ac69-3c90-4495-a3a6-a39fdd570232",
   "tenant_id": "default",
   "dataset": "purchase_order_lines",
   "source_system": "ERP",
@@ -100,7 +100,7 @@ Response `201`
 
 ```json
 {
-  "id": "913ae0f0-5cf1-4a40-976e-b04c88df3e26",
+  "id": "12a0f4b9-f275-4d34-8b88-8ba15bd6e1e2",
   "tenant_id": "default",
   "dataset": "goods_receipt_lines",
   "source_system": "WMS",
@@ -151,7 +151,8 @@ Response `201`
 
 ```json
 {
-  "id": "ce6a8de9-eae3-47cc-a864-0ff4186a9847",
+  "id": "96cb100b-8e03-4021-93be-27c285594849",
+  "run_number": 1,
   "rule_version": "receipt_shortfall/v1",
   "mapping_version": "map-1e173865a4d4",
   "evaluated_at": "2026-10-16T09:30:00Z",
@@ -364,7 +365,7 @@ Response `200`
     "po_line": {
       "source_system": "ERP",
       "source_record_id": "ERP-PO505-L1",
-      "import_id": "74dc140b-b3f5-4ffb-80a4-84abcb1977b2",
+      "import_id": "d2a0ac69-3c90-4495-a3a6-a39fdd570232",
       "content_hash": "7e34c8b7bde08b380ea8e7690efb5e63a712b848ef0630bacd7c271137f82661",
       "ordered_qty": "10",
       "ordered_uom": "BOX",
@@ -376,7 +377,7 @@ Response `200`
       {
         "source_system": "WMS",
         "source_record_id": "WMS-GRN505-A-L1",
-        "import_id": "dfd83a68-b236-4cff-89eb-b12bdc6de3ef",
+        "import_id": "a018612a-38c8-4e03-88be-224d06f595f8",
         "content_hash": "5ed723c777b46291f854127a944ef57b15931a5cb117c0d52066b727a840dc6f",
         "receipt_number": "GRN-505-A",
         "receipt_line": 1,
@@ -419,7 +420,7 @@ Response `200`
       "dataset": "purchase_order_lines",
       "source_system": "ERP",
       "source_record_id": "ERP-PO505-L1",
-      "import_id": "74dc140b-b3f5-4ffb-80a4-84abcb1977b2",
+      "import_id": "d2a0ac69-3c90-4495-a3a6-a39fdd570232",
       "import_filename": "purchase_order_lines.csv",
       "row_number": 6,
       "content_hash": "7e34c8b7bde08b380ea8e7690efb5e63a712b848ef0630bacd7c271137f82661",
@@ -440,7 +441,7 @@ Response `200`
       "dataset": "goods_receipt_lines",
       "source_system": "WMS",
       "source_record_id": "WMS-GRN505-A-L1",
-      "import_id": "dfd83a68-b236-4cff-89eb-b12bdc6de3ef",
+      "import_id": "a018612a-38c8-4e03-88be-224d06f595f8",
       "import_filename": "goods_receipt_lines.csv",
       "row_number": 6,
       "content_hash": "5ed723c777b46291f854127a944ef57b15931a5cb117c0d52066b727a840dc6f",
@@ -461,7 +462,7 @@ Response `200`
   ],
   "tasks": [
     {
-      "id": "45846adc-b9ed-4b28-8ab1-4475bec1605f",
+      "id": "831985c8-df3a-48ed-8605-e8b7ecaf9ca9",
       "task_key": "receipt_shortfall:ERP:PO-505:1:investigate",
       "exception_id": "5d9da169-51a2-5dd3-938e-90f1d555b3fb",
       "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -485,7 +486,7 @@ Response `200`
       "actor": "system",
       "occurred_at": "2026-10-16T09:30:00Z",
       "data": {
-        "run_id": "ce6a8de9-eae3-47cc-a864-0ff4186a9847",
+        "run_id": "96cb100b-8e03-4021-93be-27c285594849",
         "variance_qty": "24",
         "base_uom": "EA"
       }
@@ -505,7 +506,7 @@ Response `200`
 ```json
 [
   {
-    "id": "025daca9-e956-4fab-841a-047e8b91ba01",
+    "id": "7437ca8f-7b53-40d0-b35c-54a86b3cd0cf",
     "task_key": "receipt_shortfall:ERP:PO-506:1:investigate",
     "exception_id": "ed4497e8-f97d-53a9-86b7-1138a0410bc7",
     "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -523,7 +524,7 @@ Response `200`
     "version": 2
   },
   {
-    "id": "1311c0e3-f9c4-4239-8b93-7e934d2d766a",
+    "id": "d6a7cacc-ebce-4794-944f-94bcc80a8c93",
     "task_key": "receipt_shortfall:ERP:PO-501:1:investigate",
     "exception_id": "e5db99d3-c742-5291-bebc-c642178332ac",
     "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -546,7 +547,7 @@ Response `200`
 ## Invalid transition
 
 ```http
-POST /tasks/025daca9-e956-4fab-841a-047e8b91ba01/complete
+POST /tasks/7437ca8f-7b53-40d0-b35c-54a86b3cd0cf/complete
 X-Actor-Id: HR-102
 
 {
@@ -576,7 +577,7 @@ Response `409`
 ## Acknowledge
 
 ```http
-POST /tasks/025daca9-e956-4fab-841a-047e8b91ba01/acknowledge
+POST /tasks/7437ca8f-7b53-40d0-b35c-54a86b3cd0cf/acknowledge
 X-Actor-Id: HR-102
 ```
 
@@ -584,7 +585,7 @@ Response `200`
 
 ```json
 {
-  "id": "025daca9-e956-4fab-841a-047e8b91ba01",
+  "id": "7437ca8f-7b53-40d0-b35c-54a86b3cd0cf",
   "task_key": "receipt_shortfall:ERP:PO-506:1:investigate",
   "exception_id": "ed4497e8-f97d-53a9-86b7-1138a0410bc7",
   "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -607,7 +608,7 @@ Response `200`
 ## Complete (after start)
 
 ```http
-POST /tasks/025daca9-e956-4fab-841a-047e8b91ba01/complete
+POST /tasks/7437ca8f-7b53-40d0-b35c-54a86b3cd0cf/complete
 X-Actor-Id: HR-102
 Idempotency-Key: complete-7f3a
 
@@ -622,7 +623,7 @@ Response `200`
 
 ```json
 {
-  "id": "025daca9-e956-4fab-841a-047e8b91ba01",
+  "id": "7437ca8f-7b53-40d0-b35c-54a86b3cd0cf",
   "task_key": "receipt_shortfall:ERP:PO-506:1:investigate",
   "exception_id": "ed4497e8-f97d-53a9-86b7-1138a0410bc7",
   "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -645,7 +646,7 @@ Response `200`
 ## Retry the same completion (client timed out)
 
 ```http
-POST /tasks/025daca9-e956-4fab-841a-047e8b91ba01/complete
+POST /tasks/7437ca8f-7b53-40d0-b35c-54a86b3cd0cf/complete
 X-Actor-Id: HR-102
 Idempotency-Key: complete-7f3a
 
@@ -660,7 +661,7 @@ Response `200`
 
 ```json
 {
-  "id": "025daca9-e956-4fab-841a-047e8b91ba01",
+  "id": "7437ca8f-7b53-40d0-b35c-54a86b3cd0cf",
   "task_key": "receipt_shortfall:ERP:PO-506:1:investigate",
   "exception_id": "ed4497e8-f97d-53a9-86b7-1138a0410bc7",
   "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -683,7 +684,7 @@ Response `200`
 ## Verify (store manager)
 
 ```http
-POST /tasks/025daca9-e956-4fab-841a-047e8b91ba01/verify
+POST /tasks/7437ca8f-7b53-40d0-b35c-54a86b3cd0cf/verify
 X-Actor-Id: HR-201
 
 {
@@ -695,7 +696,7 @@ Response `200`
 
 ```json
 {
-  "id": "025daca9-e956-4fab-841a-047e8b91ba01",
+  "id": "7437ca8f-7b53-40d0-b35c-54a86b3cd0cf",
   "task_key": "receipt_shortfall:ERP:PO-506:1:investigate",
   "exception_id": "ed4497e8-f97d-53a9-86b7-1138a0410bc7",
   "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -718,7 +719,7 @@ Response `200`
 ## Reassign to an ineligible employee is refused
 
 ```http
-POST /tasks/1311c0e3-f9c4-4239-8b93-7e934d2d766a/reassign
+POST /tasks/d6a7cacc-ebce-4794-944f-94bcc80a8c93/reassign
 X-Actor-Id: HR-201
 
 {
@@ -746,14 +747,14 @@ Response `409`
 ## Task detail with assignment history and audit events
 
 ```http
-GET /tasks/1311c0e3-f9c4-4239-8b93-7e934d2d766a
+GET /tasks/d6a7cacc-ebce-4794-944f-94bcc80a8c93
 ```
 
 Response `200`
 
 ```json
 {
-  "id": "1311c0e3-f9c4-4239-8b93-7e934d2d766a",
+  "id": "d6a7cacc-ebce-4794-944f-94bcc80a8c93",
   "task_key": "receipt_shortfall:ERP:PO-501:1:investigate",
   "exception_id": "e5db99d3-c742-5291-bebc-c642178332ac",
   "task_type": "INVESTIGATE_RECEIPT_SHORTFALL",
@@ -906,7 +907,7 @@ Response `200`
   "failed_imports": [],
   "rejected_rows": [
     {
-      "import_id": "913ae0f0-5cf1-4a40-976e-b04c88df3e26",
+      "import_id": "12a0f4b9-f275-4d34-8b88-8ba15bd6e1e2",
       "dataset": "goods_receipt_lines",
       "row_number": 2,
       "source_record_id": "WMS-X-1",
@@ -920,7 +921,7 @@ Response `200`
   "unmapped_records": [],
   "not_evaluable_po_lines": [],
   "receipts_without_po_line": [],
-  "latest_detection_run_id": "ce6a8de9-eae3-47cc-a864-0ff4186a9847"
+  "latest_detection_run_id": "96cb100b-8e03-4021-93be-27c285594849"
 }
 ```
 

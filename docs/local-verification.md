@@ -2,7 +2,7 @@
 
 There are three levels of checking, from fastest to most hands-on:
 
-1. Run the automated test suite (89 tests).
+1. Run the automated test suite (91 tests).
 2. Start the server and run one script that checks every scenario over HTTP.
 3. Click through the API yourself in the browser (Swagger UI).
 
@@ -39,7 +39,7 @@ Every command below is the same on both systems once the virtual environment is 
 python -m pytest
 ```
 
-Expected: `88 passed, 1 skipped`. The skipped test needs PostgreSQL (see step 4).
+Expected: `90 passed, 1 skipped`. The skipped test needs PostgreSQL (see step 4).
 `python -m pytest -v` lists every test by name. The table in the README maps each required
 test area to its file.
 
@@ -129,7 +129,7 @@ $env:OPSIB_TEST_DATABASE_URL="postgresql+psycopg://opsib:opsib-local-only@localh
 python -m pytest
 ```
 
-Expected: `89 passed`.
+Expected: `91 passed`.
 
 ## Troubleshooting
 

@@ -83,8 +83,8 @@ throwaway database.
 Last run:
 
 ```
-SQLite:      88 passed, 1 skipped in 21.24s   (the skip is the PostgreSQL-only concurrency test)
-PostgreSQL:  89 passed in 40.79s              (PostgreSQL 16)
+SQLite:      90 passed, 1 skipped in 14.02s   (the skip is the PostgreSQL-only concurrency test)
+PostgreSQL:  91 passed in 27.20s              (PostgreSQL 16)
 Also run on Python 3.12 (oldest allowed package versions) and 3.14 (latest versions): same results.
 ```
 
@@ -151,7 +151,7 @@ app/
   ai/           optional advisory summary interface + validation
   db/           models, UTC datetime type, sessions, tenant lock
   cli.py        load / detect / demo
-migrations/     Alembic (0001 initial schema)
+migrations/     Alembic (0001 initial schema, 0002 detection run number)
 fixtures/       supplied files, unchanged (SHA256SUMS verified by a test)
 tests/
 scripts/generate_api_docs.py       regenerates docs/openapi.json and docs/api-examples.md

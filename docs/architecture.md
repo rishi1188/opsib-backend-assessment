@@ -53,10 +53,10 @@ Exports without a native record ID get a documented derived ID:
 
 | Table | Grain | Key / constraint |
 |---|---|---|
-| `detection_run` | one evaluation at a frozen instant | rule version, mapping version, summary |
+| `detection_run` | one evaluation at a frozen instant | unique `(tenant_id, run_number)`; rule version, mapping version, summary |
 | `line_evaluation` | one PO line in one run | every outcome is recorded, not only shortfalls |
 | `exception_case` | one business case | **unique `(tenant_id, case_key)`**; `id = uuid5(tenant, case_key)` |
-| `exception_event` | audit | `DETECTED`, `REEVALUATED`, `CLEARED`, `REOPENED`, `RESOLVED` |
+| `exception_event` | audit | `DETECTED`, `REEVALUATED`, `EVALUATION_BLOCKED`, `CLEARED`, `REOPENED`, `RESOLVED` |
 | `task` | one unit of work | **unique `(tenant_id, task_key)`**, status check constraint, optimistic `version` column |
 | `task_assignment` | one assignment decision | policy, reason, every candidate checked with reasons, who assigned |
 | `task_event` | audit | every transition with from/to status, actor, data |
@@ -111,8 +111,10 @@ For each canonical PO line, in this order:
 
 Receipts that arrive after the deadline but before the evaluation time count, because they
 reduce what is actually missing. A re-run that sees new receipts updates the same exception
-(`REEVALUATED`) or clears it (`CLEARED`, open tasks `CANCELLED`). Resolved exceptions are not
-rewritten.
+(`REEVALUATED`) or clears it (`CLEARED`, open tasks `CANCELLED`). A case is cleared only on a
+definitive `NO_VARIANCE`, `OVER_RECEIVED` or `CANCELLED` outcome. If its evidence becomes
+conflicting, unmapped or missing, it stays `OPEN` with an `EVALUATION_BLOCKED` event, because
+"cannot evaluate" is not "resolved". Resolved exceptions are not rewritten.
 
 ## Routing policy (`store_receiving_routing/v1`)
 

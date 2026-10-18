@@ -89,3 +89,34 @@ def test_late_receipt_closing_the_gap_clears_exception_and_cancels_task(env):
         assert exc.status == "CLEARED"
         assert exc.tasks[0].status == "CANCELLED"
         assert exc.events[-1].event_type == "CLEARED"
+
+
+def test_conflicting_evidence_does_not_clear_an_open_exception(env):
+    """'Cannot evaluate' is not 'resolved': the case stays OPEN with its task."""
+    env.load_all()
+    env.detect()
+    env.load("goods_receipt_lines", csv_with(
+        "goods_receipt_lines",
+        replace=lambda r: {"accepted_qty": "100"} if r["source_record_id"] == "WMS-GRN501-A-L1" else None))
+    env.detect()
+    env.detect()  # a second blocked run does not repeat the event
+    with env.session() as s:
+        exc = s.scalar(select(ExceptionCase).where(ExceptionCase.po_number == "PO-501"))
+        assert exc.status == "OPEN"
+        assert exc.tasks[0].status == "ASSIGNED"
+        assert [e.event_type for e in exc.events] == ["DETECTED", "EVALUATION_BLOCKED"]
+        assert exc.events[-1].data["reasons"][0].startswith("CONFLICTING_SOURCE_RECORD")
+
+
+def test_data_quality_reads_the_latest_run_even_with_a_frozen_clock(env, client):
+    env.load_all()
+    for _ in range(3):
+        env.detect()
+    env.load("goods_receipt_lines", csv_with(
+        "goods_receipt_lines",
+        replace=lambda r: {"accepted_qty": "100"} if r["source_record_id"] == "WMS-GRN501-A-L1" else None))
+    run = client.post("/detection/runs").json()
+    assert run["run_number"] == 4
+    dq = client.get("/data-quality").json()
+    assert dq["latest_detection_run_id"] == run["id"]
+    assert [x["po_number"] for x in dq["not_evaluable_po_lines"]] == ["PO-501"]

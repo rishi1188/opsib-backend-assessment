@@ -43,7 +43,7 @@ def data_quality_report(session: Session, tenant_id: str) -> dict:
                 unmapped.append({"record_type": kind, "record": label(row), "issues": row.mapping_issues})
 
     latest_run = session.scalar(
-        select(DetectionRun).where(DetectionRun.tenant_id == tenant_id).order_by(DetectionRun.evaluated_at.desc(), DetectionRun.id.desc()).limit(1)
+        select(DetectionRun).where(DetectionRun.tenant_id == tenant_id).order_by(DetectionRun.run_number.desc()).limit(1)
     )
     not_evaluable = []
     orphan_receipts: list[str] = []

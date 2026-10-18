@@ -1631,6 +1631,10 @@
             "type": "string",
             "title": "Id"
           },
+          "run_number": {
+            "type": "integer",
+            "title": "Run Number"
+          },
           "rule_version": {
             "type": "string",
             "title": "Rule Version"
@@ -1658,6 +1662,7 @@
         "type": "object",
         "required": [
           "id",
+          "run_number",
           "rule_version",
           "mapping_version",
           "evaluated_at",

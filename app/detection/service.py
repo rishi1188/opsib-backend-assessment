@@ -11,7 +11,7 @@ import uuid
 from collections import Counter, defaultdict
 from decimal import Decimal
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.clock import Clock
@@ -30,6 +30,9 @@ from app.db.session import acquire_tenant_lock, transaction
 from app.detection.explain import build_explanation
 from app.detection.shortfall import (
     RULE_ID,
+    CANCELLED,
+    NO_VARIANCE,
+    OVER_RECEIVED,
     RULE_VERSION,
     SHORTFALL,
     Evaluation,
@@ -43,6 +46,8 @@ from app.mapping.projector import load_alias_index
 from app.workflows.service import cancel_open_tasks, ensure_investigation_task, exception_event
 
 log = get_logger("detection")
+
+CLEARING_OUTCOMES = frozenset({NO_VARIANCE, OVER_RECEIVED, CANCELLED})
 
 EXCEPTION_NAMESPACE = uuid.UUID("6f1c2a1e-5b0e-4f7e-9c7a-0d5e3b8a2f10")
 
@@ -175,20 +180,25 @@ def _run(session: Session, clock: Clock, settings: Settings, tenant_id: str) -> 
     key_counts = Counter((p.po_number, p.line_number) for p in pos)
     po_keys = set(key_counts)
 
-    run = DetectionRun(tenant_id=tenant_id, rule_version=RULE_VERSION, mapping_version=mapping_version,
-                       evaluated_at=as_of, summary={})
+    last_number = session.scalar(
+        select(func.max(DetectionRun.run_number)).where(DetectionRun.tenant_id == tenant_id)
+    ) or 0
+    run = DetectionRun(tenant_id=tenant_id, run_number=last_number + 1, rule_version=RULE_VERSION,
+                       mapping_version=mapping_version, evaluated_at=as_of, summary={})
     session.add(run)
     session.flush()
 
     outcomes: Counter[str] = Counter()
     created = updated = cleared = tasks_created = 0
     shortfall_keys: set[str] = set()
+    outcome_by_key: dict[str, Evaluation] = {}
 
     for po in sorted(pos, key=lambda p: (p.po_number, p.line_number, p.ref.source_record_id)):
         ev = evaluate_po_line(po, by_line.get((po.po_number, po.line_number), []), as_of,
                               settings.shortfall_tolerance_base_units,
                               duplicate_po_keys=key_counts[(po.po_number, po.line_number)] > 1)
         outcomes[ev.outcome] += 1
+        outcome_by_key[case_key(po)] = ev
         exception_id = None
 
         if ev.outcome == SHORTFALL:
@@ -219,19 +229,31 @@ def _run(session: Session, clock: Clock, settings: Settings, tenant_id: str) -> 
             )
         )
 
-    # Previously open shortfalls that no longer hold (e.g. a late receipt was posted).
+    # Previously open shortfalls. Clear one only when the rule now gives a
+    # definitive "no shortfall" answer (e.g. a late receipt was posted). If the
+    # evidence became unmapped, conflicting or missing, the case stays OPEN:
+    # "cannot evaluate" is not the same as "resolved".
     for exc in session.scalars(
         select(ExceptionCase).where(ExceptionCase.tenant_id == tenant_id, ExceptionCase.status == "OPEN",
                                     ExceptionCase.exception_type == RULE_ID)
     ):
-        if exc.case_key not in shortfall_keys:
-            exc.status = "CLEARED"
-            exc.last_evaluated_at = as_of
+        if exc.case_key in shortfall_keys:
+            continue
+        ev = outcome_by_key.get(exc.case_key)
+        if ev is None or ev.outcome not in CLEARING_OUTCOMES:
+            reasons = ev.reasons if ev else ["PO line no longer present in the source data"]
+            last = exc.events[-1] if exc.events else None
+            if not (last and last.event_type == "EVALUATION_BLOCKED" and last.data.get("reasons") == reasons):
+                exception_event(session, exc, clock, "EVALUATION_BLOCKED", run_id=run.id, reasons=reasons)
             exc.last_run_id = run.id
-            exception_event(session, exc, clock, "CLEARED", run_id=run.id,
-                            reason="Shortfall no longer detected at re-evaluation")
-            cancel_open_tasks(session, clock, exc, "Exception cleared on re-evaluation")
-            cleared += 1
+            continue
+        exc.status = "CLEARED"
+        exc.last_evaluated_at = as_of
+        exc.last_run_id = run.id
+        exception_event(session, exc, clock, "CLEARED", run_id=run.id, outcome=ev.outcome,
+                        reason="Shortfall no longer detected at re-evaluation")
+        cancel_open_tasks(session, clock, exc, "Exception cleared on re-evaluation")
+        cleared += 1
 
     orphans = sorted(f"{k[0]}/{k[1]}" for k in by_line if k not in po_keys)
     run.summary = {

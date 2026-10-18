@@ -260,9 +260,13 @@ class EmployeeAvailability(Base):
 
 class DetectionRun(Base):
     __tablename__ = "detection_run"
+    __table_args__ = (UniqueConstraint("tenant_id", "run_number"),)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     tenant_id: Mapped[str] = mapped_column(String(64), index=True)
+    # Per-tenant sequence. With a frozen clock every run has the same
+    # evaluated_at, so "latest run" must be decided by this number.
+    run_number: Mapped[int] = mapped_column(Integer, server_default="0")
     rule_version: Mapped[str] = mapped_column(String(64))
     mapping_version: Mapped[str] = mapped_column(String(32))
     evaluated_at: Mapped[datetime] = mapped_column(UTCDateTime())

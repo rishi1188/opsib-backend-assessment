@@ -48,6 +48,7 @@ class ImportDetailOut(ImportOut):
 
 class DetectionRunOut(ORM):
     id: str
+    run_number: int
     rule_version: str
     mapping_version: str
     evaluated_at: UTC
