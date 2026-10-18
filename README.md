@@ -240,3 +240,36 @@ Scenario variants are built in memory by `tests/conftest.py::csv_with` from the 
 * late receipts `GRN-501-C` of 5 EA and 8 EA posted on 2026-10-16 13:00 +05:30,
 * reformatted but identical PO rows (`100.00`, `Z` timestamps),
 * rows with a negative quantity, no UTC offset, an unknown status and a missing source ID.
+
+## AI tooling disclosure
+
+**Tool used:** Claude (Anthropic), through Claude Code in a Claude Projects workspace. No other
+AI tools were used. The application makes no AI calls at runtime (see "AI boundary" above).
+
+**What the AI did:**
+
+* Read the assessment PDF and fixture README and proposed a four-step plan (ingestion and
+  mapping, detection, routing and workflow, tests and docs).
+* Wrote the application code, the Alembic migrations, the automated tests, the verification
+  script and the documentation in this repository.
+* Ran the test suite on SQLite and PostgreSQL 16, and on Python 3.12, 3.13 and 3.14.
+* Found and fixed two of its own bugs while preparing a manual test walkthrough: "latest
+  detection run" was ambiguous under the frozen clock, and an open shortfall was wrongly cleared
+  when its evidence became conflicting. Both have regression tests.
+
+**What I did:**
+
+* Supplied the assessment brief, the fixture data and the constraints: Python/FastAPI/
+  SQLAlchemy, the frozen evaluation time, neutral findings, the routing rules and the task
+  lifecycle.
+* Reviewed and approved the plan before implementation started, and chose to keep the scope to
+  the backend (no frontend), as the brief asks.
+* Ran everything myself on my own Windows laptop: installed dependencies, ran the test suite,
+  started the API, ran `scripts/verify_running_server.py` (all checks passed) and exercised the
+  endpoints in the Swagger UI.
+* Reported the problems I hit on Windows, which led to two fixes: dependency pins that had no
+  Python 3.14 wheels, and Git line-ending conversion breaking the fixture checksum test.
+* Decided which fixes went into the submission.
+
+I am responsible for every line submitted and have prepared to explain the design, the
+trade-offs and the failure modes, and to modify the code during the review.
