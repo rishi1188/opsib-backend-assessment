@@ -6,7 +6,7 @@ canonical model, detects **receipt shortfalls** against purchase orders at a fro
 time, routes an investigation task to an eligible employee, and records the task lifecycle
 with a full audit trail.
 
-Stack: Python 3.12+, FastAPI, SQLAlchemy 2, Alembic, PostgreSQL (SQLite for quick local runs).
+Stack: Python 3.12–3.14, FastAPI, SQLAlchemy 2, Alembic, PostgreSQL (SQLite for quick local runs).
 
 * **[How to verify everything on your machine](docs/local-verification.md)**
 * [Architecture and data model](docs/architecture.md), which also answers both design questions
@@ -85,6 +85,7 @@ Last run:
 ```
 SQLite:      88 passed, 1 skipped in 21.24s   (the skip is the PostgreSQL-only concurrency test)
 PostgreSQL:  89 passed in 40.79s              (PostgreSQL 16)
+Also run on Python 3.12 (oldest allowed package versions) and 3.14 (latest versions): same results.
 ```
 
 | Required test area | Where |

@@ -1,8 +1,10 @@
-fastapi==0.115.6
-uvicorn==0.34.0
-sqlalchemy==2.0.36
-alembic==1.14.0
-pydantic==2.10.4
-pydantic-settings==2.7.0
-python-multipart==0.0.20
-psycopg[binary]==3.2.3
+# Lower bounds are the oldest versions with wheels for Python 3.12-3.14 on
+# Windows, macOS and Linux; upper bounds stop at the next major version.
+fastapi>=0.115.6,<1
+uvicorn>=0.34,<1
+sqlalchemy>=2.0.41,<2.1
+alembic>=1.14,<2
+pydantic>=2.12,<3
+pydantic-settings>=2.7,<3
+python-multipart>=0.0.20
+psycopg[binary]>=3.2.10,<4
